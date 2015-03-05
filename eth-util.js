@@ -5,9 +5,10 @@ var fs = require('fs');
 
 var args = process.argv.slice(2);
 var printHelp = function(){
-	console.log("usage: eth-uils.js [command] [args]");
+	console.log("usage: eth-uil.js [command] [args]");
 	console.log("compile [fileName] - compiles the specified file");
 	console.log("deploy [fileName] - compiles the specified file and creates a contract on the blockchain");
+    console.log("cmd [contract address] [path to abi] [command] [args*] - calls a method on a contract (i.e. cmd 0x3d8ef... simple-storage.abi set 40)");
 	console.log("watch-blocks - prints current block number whenever a new block is created");
 }
 
@@ -119,7 +120,7 @@ if(cmd == "check-contract"){
 	process.exit(0);
 }
 
-if(cmd == "set"){
+if(cmd == "cmd"){
 	if(args.length < 4){
 		printHelp();
 		process.exit(1);
@@ -127,51 +128,17 @@ if(cmd == "set"){
 
 	var address = args[1];
 	var abi = JSON.parse(fs.readFileSync(args[2], {encoding: "utf8"}));
-	var value = args[3];
-	console.log("address: " + address);
-	var contract = web3.eth.contract(address, abi);
-	
-	var result = contract.transact().set(value);
-	console.log(result);
-	process.exit(0);
-}
-
-if(cmd == "cmd"){
-	if(args.length < 4){
-		printHelp();
-		process.exit(1);
-	}
-
-	var contract_cmd = args[1];
-
-	var address = args[2];
-	var abi = JSON.parse(fs.readFileSync(args[3], {encoding: "utf8"}));
+    var contract_cmd = args[3];
 
 	var contract = web3.eth.contract(address, abi);
 
 	var contract_cmd_args = args.slice(4);
-	
-	var result = contract[contract_cmd].apply(null, contract_cmd_args);
-	if(result){
-		console.log(result.toNumber());
-	}
-	process.exit(0);
-}
+	if(contract_cmd_args.length > 0){
+        var result = contract[contract_cmd].apply(null, contract_cmd_args);
+    } else {
+        var result = contract.call()[contract_cmd]();
+    }
 
-if(cmd == "call"){
-	if(args.length < 4){
-		printHelp();
-		process.exit(1);
-	}
-
-	var contract_cmd = args[1];
-
-	var address = args[2];
-	var abi = JSON.parse(fs.readFileSync(args[3], {encoding: "utf8"}));
-
-	var contract = web3.eth.contract(address, abi);
-	
-	var result = contract.call()[contract_cmd]();
 	if(result){
 		console.log(result.toNumber());
 	}
