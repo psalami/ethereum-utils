@@ -118,7 +118,7 @@ if(cmd == "check-contract"){
 	}
 
 	var address = args[1];
-	var result = web3.eth.codeAt(address);
+	var result = web3.eth.getData(address);
 	if(web3.toAscii(result)){
 		console.log("true");
 	}else{
@@ -148,7 +148,7 @@ if(cmd == "cmd"){
     }
 
 	if(result){
-		console.log(result.toNumber());
+		console.log(result);
 	}
 	process.exit(0);
 }
