@@ -34,23 +34,30 @@ var compileFile = function(fileName){
 	
 	var compiled;
 	if(fileType == "solidity"){
-		compiled = web3.eth.solidity(fileContents);
+		compiled = web3.eth.compile.solidity(fileContents);
 	}
 
 	return compiled;
 }
 
 var deploy = function(byteCode){
-	var address = web3.eth.transact({code: byteCode});
+	var address = web3.eth.sendTransaction({code: byteCode});
 	return address;
 }
 
 
 var watchBlocks = function(){
-	console.log("current block: " + web3.eth.number);
-	web3.eth.watch('chain').changed(function(res){
-		console.log("current block: " + web3.eth.number);
-	});
+	console.log("current block: " + web3.eth.blockNumber);
+	web3.eth.filter('chain').watch(function(res){
+        console.log("current block: " + web3.eth.blockNumber);
+    });
+}
+
+var watchPending = function(){
+    web3.eth.filter('pending').watch(function(res){
+        console.log("pending transactions:");
+        console.log(res);
+    });
 }
 
 if(args.length == 0){
@@ -130,7 +137,8 @@ if(cmd == "cmd"){
 	var abi = JSON.parse(fs.readFileSync(args[2], {encoding: "utf8"}));
     var contract_cmd = args[3];
 
-	var contract = web3.eth.contract(address, abi);
+    var contractClass = web3.eth.contract(abi);
+	var contract = new contractClass(address);
 
 	var contract_cmd_args = args.slice(4);
 	if(contract_cmd_args.length > 0){
@@ -147,4 +155,8 @@ if(cmd == "cmd"){
 
 if(cmd == "watch-blocks"){
 	watchBlocks();
+}
+
+if(cmd == "watch-pending"){
+    watchPending();
 }
