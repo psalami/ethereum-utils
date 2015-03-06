@@ -1,0 +1,29 @@
+{
+  "name": "ethereum-contract-util",
+  "version": "1.0.0",
+  "description": "simple node.js utility to deploy contracts to the Ethereum blockchain, send transaction messages to a contract and to call functions on a contract to retrieve data",
+  "main": "eth-util.js",
+  "dependencies": {
+    "ethereum.js": "git://github.com/ethereum/ethereum.js#develop",
+    "request": "^2.53.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psalami/ethereum-utils.git"
+  },
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "utilities"
+  ],
+  "author": "Patrick Salami",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/psalami/ethereum-utils/issues"
+  },
+  "homepage": "https://github.com/psalami/ethereum-utils"
+}
