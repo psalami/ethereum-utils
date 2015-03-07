@@ -10,6 +10,9 @@ var printHelp = function(){
 	console.log("deploy [fileName] - compiles the specified file and creates a contract on the blockchain");
     console.log("cmd [contract address] [path to abi] [command] [args*] - calls a method on a contract (i.e. cmd 0x3d8ef... simple-storage.abi set 40)");
 	console.log("watch-blocks - prints current block number whenever a new block is created");
+    console.log("address - shows the address of the first account owned by the connected Ethereum node");
+    console.log("balance - shows the current balance of the first account owned by the connected Ethereum node");
+    console.log("send-ether [amount] [recipient] - sends ether to the specified address");
 }
 
 var compileFile = function(fileName){
@@ -50,7 +53,10 @@ var watchBlocks = function(){
 	console.log("current block: " + web3.eth.blockNumber);
 	web3.eth.filter('chain').watch(function(res){
         var numTransactions = web3.eth.getBlockTransactionCount(web3.eth.blockNumber);
-        console.log("last block number: " + web3.eth.blockNumber + "; " + numTransactions + " transactions");
+        var block = web3.eth.getBlock(web3.eth.blockNumber);
+        console.log("-- " + web3.eth.blockNumber + " --");
+        console.log("numTransactions: " + numTransactions);
+        console.log(block);
     });
 }
 
@@ -156,7 +162,8 @@ if(cmd == "cmd"){
     }
 
 	if(result){
-		console.log(result);
+		console.log(result.toNumber());
+
 	}
 	process.exit(0);
 }
@@ -167,4 +174,26 @@ if(cmd == "watch-blocks"){
 
 if(cmd == "watch-pending"){
     watchPending();
+}
+
+if(cmd == "balance"){
+    console.log(web3.eth.getBalance(web3.eth.accounts[0]).toNumber());
+    process.exit(0);
+}
+
+if(cmd == "address"){
+    console.log(web3.eth.accounts[0]);
+    process.exit(0);
+}
+
+if(cmd == "send-ether"){
+    if(args.length < 2){
+        printHelp();
+        process.exit(1);
+    }
+
+    var amount = web3.toWei(args[1], "ether");
+    var address = args[2];
+    web3.eth.sendTransaction({to:address, value:amount});
+    process.exit(0);
 }
