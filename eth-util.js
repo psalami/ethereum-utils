@@ -49,14 +49,22 @@ var deploy = function(byteCode){
 var watchBlocks = function(){
 	console.log("current block: " + web3.eth.blockNumber);
 	web3.eth.filter('chain').watch(function(res){
-        console.log("current block: " + web3.eth.blockNumber);
+        var numTransactions = web3.eth.getBlockTransactionCount(web3.eth.blockNumber);
+        console.log("last block number: " + web3.eth.blockNumber + "; " + numTransactions + " transactions");
     });
 }
 
 var watchPending = function(){
+    web3.eth.defaultBlock = 0;
     web3.eth.filter('pending').watch(function(res){
-        console.log("pending transactions:");
-        console.log(res);
+        console.log("block: " + web3.eth.blockNumber);
+        var numTransactions = web3.eth.getBlockTransactionCount(web3.eth.blockNumber);
+        console.log("num transactions: " + numTransactions)
+        for(var i = 0; i < numTransactions; i++){
+            var tx = web3.eth.getTransaction(web3.eth.blockNumber, i);
+            console.log("from: " + tx["from"]);
+            console.log("to: " + tx["to"]);
+        }
     });
 }
 
@@ -73,7 +81,7 @@ if(cmd == "help"){
 }
 
 
-web3.setProvider(new web3.providers.HttpSyncProvider('http://localhost:8080'));
+web3.setProvider(new web3.providers.HttpSyncProvider('http://127.0.0.1:8080'));
 
 if(cmd == "compile"){
 	if(args.length < 2){
