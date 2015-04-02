@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # starts local ethereum node #3
-eth -L -d ~/.eth-cli-3 -l 30305 -n off -m on -j --json-rpc-port 8082 -r 172.20.10.4 -p 30304
+eth -d ~/.eth-cli-3 -l 30301 -n off -j --json-rpc-port 8082 -m on -t 8 -p 30304 -r 10.0.1.16 --verbosity 11
