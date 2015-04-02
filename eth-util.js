@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 var web3 = require('ethereum.js');
 var fs = require('fs');
 
@@ -87,7 +88,7 @@ if(cmd == "help"){
 }
 
 
-web3.setProvider(new web3.providers.HttpSyncProvider('http://127.0.0.1:8080'));
+web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8080'));
 
 if(cmd == "compile"){
 	if(args.length < 2){
@@ -132,7 +133,7 @@ if(cmd == "check-contract"){
 	}
 
 	var address = args[1];
-	var result = web3.eth.getData(address);
+	var result = web3.eth.getCode(address);
 	if(web3.toAscii(result)){
 		console.log("true");
 	}else{
