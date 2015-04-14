@@ -45,9 +45,21 @@ var compileFile = function(fileName){
 }
 
 var deploy = function(byteCode){
-	var address = web3.eth.sendTransaction({code: byteCode});
+	var address = web3.eth.sendTransaction({data: byteCode});
 	return address;
 }
+
+/*
+ , function(err, address){
+ if(err){
+ console.log("error:");
+ console.log(err);
+ }else{
+ console.log("== ADDRESS:");
+ console.log(address);
+ }
+ }
+ */
 
 
 var watchBlocks = function(){
@@ -87,8 +99,16 @@ if(cmd == "help"){
 	process.exit(0);
 }
 
+var port = 8080;
+if(typeof process.env.PORT != "undefined"){
+    port = process.env.PORT;
+}
+var host = "127.0.0.1";
+if(typeof process.env.HOST != "undefined"){
+    host = process.env.HOST;
+}
 
-web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8080'));
+web3.setProvider(new web3.providers.HttpProvider('http://' + host + ':' + port));
 
 if(cmd == "compile"){
 	if(args.length < 2){
@@ -114,6 +134,7 @@ if(cmd == "deploy"){
 	}
 	var fileName = args[1];
 	var result = compileFile(fileName);
+    //var result = fs.readFileSync(fileName, {encoding: "utf8"});
 	if(result){
 		console.log("compilation successful");
 		console.log("deploying code to blockchain...");
@@ -163,7 +184,7 @@ if(cmd == "cmd"){
     }
 
 	if(result){
-		console.log(result.toNumber());
+		console.log(result);
 
 	}
 	process.exit(0);
