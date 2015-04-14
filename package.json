@@ -4,7 +4,8 @@
   "description": "simple node.js utility to deploy contracts to the Ethereum blockchain, send transaction messages to a contract and to call functions on a contract to retrieve data",
   "main": "eth-util.js",
   "dependencies": {
-    "ethereum.js": "git://github.com/ethereum/ethereum.js#develop",
+    "bignumber": "git://github.com/debris/bignumber.js#master",
+    "web3": "git://github.com/ethereum/web3.js#develop",
     "request": "^2.53.0"
   },
   "devDependencies": {},
